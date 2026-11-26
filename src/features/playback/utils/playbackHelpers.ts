@@ -22,6 +22,18 @@ export async function createPlaybackTrack(
   const headers = {
     Authorization: `Bearer ${playbackToken}`,
   };
+  fetch(song.streamUrl, { headers: { ...headers, Range: "bytes=0-1" } })
+    .then((r) =>
+      console.log(
+        "[stream-check]",
+        r.status,
+        r.headers.get("content-type"),
+        song.streamUrl,
+        "token:",
+        !!playbackToken,
+      ),
+    )
+    .catch((e) => console.log("[stream-check] failed", String(e), song.streamUrl));
   return {
     url: { uri: song.streamUrl, headers },
     mediaId: song.id,
